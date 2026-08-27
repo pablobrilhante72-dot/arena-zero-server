@@ -40,6 +40,11 @@ wss.on('connection', (ws) => {
     const p = players[id];
     if (!p) return;
 
+    if (msg.type === 'set_name') {
+      p.name = (msg.name || p.name).slice(0, 16);
+      broadcast({ type: 'player_renamed', id, name: p.name }, id);
+    }
+
     if (msg.type === 'move') {
       p.x = msg.x; p.y = msg.y; p.z = msg.z; p.yaw = msg.yaw; p.pitch = msg.pitch;
       broadcast({ type: 'player_move', id, x: p.x, y: p.y, z: p.z, yaw: p.yaw, pitch: p.pitch }, id);
